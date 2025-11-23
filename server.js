@@ -1,9 +1,15 @@
-// server.js
 const express = require('express');
-const cors = require('cors');
-
 const app = express();
-app.use(cors());
+
+// CORS manual para Vercel
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") return res.sendStatus(200);
+  next();
+});
+
 app.use(express.json());
 
 // Banco de dados em memória
@@ -51,8 +57,5 @@ app.post('/reset', (req, res) => {
   });
 });
 
-const port = process.env.PORT || 3000; // Vercel usa porta automática
-
-app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
-});
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Servidor rodando na porta ${port}`));
